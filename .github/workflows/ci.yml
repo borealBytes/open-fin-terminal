@@ -12,11 +12,14 @@ concurrency:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
   pull-requests: write
   checks: write
 
 jobs:
-  ci:
+  # Single build and validation job
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -33,50 +36,112 @@ jobs:
           node-version: '20'
           cache: 'pnpm'
 
-      # NOTE: Using --no-frozen-lockfile for GitHub-based development workflow
-      # Change to --frozen-lockfile when doing local development
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
       - name: Build all packages
         run: pnpm build
 
-      # TODO Phase 2: Remove continue-on-error once all packages have typecheck configured
       - name: Type check
-        run: pnpm typecheck || echo "Type check not configured"
-        continue-on-error: true
+        run: pnpm typecheck
 
-      # TODO Phase 2: Remove continue-on-error once all packages have lint configured  
       - name: Lint
-        run: pnpm lint || echo "Lint not configured"
-        continue-on-error: true
+        run: pnpm lint
 
-      # TODO Phase 2: Remove continue-on-error once all packages have tests
-      - name: Test
-        run: pnpm test || echo "Tests not configured"
-        continue-on-error: true
+      - name: Run tests
+        run: pnpm test
 
-      # TODO Phase 7: Enable when test coverage is meaningful
-      # - name: Test with coverage
-      #   run: pnpm test:coverage
-      #
-      # - name: Upload coverage to Codecov
-      #   uses: codecov/codecov-action@v4
-      #   with:
-      #     files: ./coverage/coverage-final.json
-      #     fail_ci_if_error: false
+      # Export static site for deployment
+      - name: Export static site
+        run: |
+          cd apps/web
+          NEXT_PUBLIC_BASE_PATH=/open-fin-terminal pnpm build
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
-      # TODO Phase 7: Enable when E2E tests are implemented
-      # - name: E2E tests
-      #   run: pnpm test:e2e
-      #
-      # - name: Upload E2E artifacts
-      #   uses: actions/upload-artifact@v4
-      #   if: failure()
-      #   with:
-      #     name: playwright-report
-      #     path: playwright-report/
-      #     retention-days: 30
+      # Upload artifact for GitHub Pages deployment
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/web/out
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+      # For PRs: Upload preview artifact
+      - name: Export PR preview
+        run: |
+          cd apps/web
+          NEXT_PUBLIC_BASE_PATH=/open-fin-terminal/pr-preview/pr-${{ github.event.pull_request.number }} pnpm build
+        if: github.event_name == 'pull_request'
+
+      - name: Upload PR preview artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-preview-${{ github.event.pull_request.number }}
+          path: apps/web/out
+          retention-days: 30
+        if: github.event_name == 'pull_request'
+
+      # Comment on PR with preview link
+      - name: Comment PR with preview info
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        with:
+          script: |
+            const pr_number = context.payload.pull_request.number;
+            const runId = context.runId;
+            
+            const body = `## 📬 PR Preview
+            
+            Build successful! Download the preview artifact:
+            
+            **[Download Preview Artifact](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${runId})**
+            
+            To view the preview:
+            1. Download the artifact from the link above
+            2. Extract the zip file
+            3. Serve the files with a static web server (e.g., \`npx serve\`)
+            
+            Or wait for the GitHub Pages deployment after merge to \`main\`.
+            `;
+            
+            // Find existing bot comment
+            const { data: comments } = await github.rest.issues.listComments({
+              issue_number: pr_number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && comment.body.includes('PR Preview')
+            );
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                comment_id: botComment.id,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                issue_number: pr_number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+            }
 
       - name: CI validation complete
-        run: echo "✅ Phase 1 Foundation - CI validation complete"
+        run: echo "✅ CI validation and build complete"
+
+  # Deploy to GitHub Pages (only on main branch pushes)
+  deploy-pages:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
