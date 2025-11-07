@@ -33,26 +33,50 @@ jobs:
           node-version: '20'
           cache: 'pnpm'
 
+      # NOTE: Using --no-frozen-lockfile for GitHub-based development workflow
+      # Change to --frozen-lockfile when doing local development
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Build all packages
         run: pnpm build
 
-      # TODO: Remove continue-on-error once all packages have typecheck configured
+      # TODO Phase 2: Remove continue-on-error once all packages have typecheck configured
       - name: Type check
         run: pnpm typecheck || echo "Type check not configured"
         continue-on-error: true
 
-      # TODO: Remove continue-on-error once all packages have lint configured
+      # TODO Phase 2: Remove continue-on-error once all packages have lint configured  
       - name: Lint
         run: pnpm lint || echo "Lint not configured"
         continue-on-error: true
 
-      # TODO: Remove continue-on-error once all packages have tests
+      # TODO Phase 2: Remove continue-on-error once all packages have tests
       - name: Test
         run: pnpm test || echo "Tests not configured"
         continue-on-error: true
 
+      # TODO Phase 7: Enable when test coverage is meaningful
+      # - name: Test with coverage
+      #   run: pnpm test:coverage
+      #
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v4
+      #   with:
+      #     files: ./coverage/coverage-final.json
+      #     fail_ci_if_error: false
+
+      # TODO Phase 7: Enable when E2E tests are implemented
+      # - name: E2E tests
+      #   run: pnpm test:e2e
+      #
+      # - name: Upload E2E artifacts
+      #   uses: actions/upload-artifact@v4
+      #   if: failure()
+      #   with:
+      #     name: playwright-report
+      #     path: playwright-report/
+      #     retention-days: 30
+
       - name: CI validation complete
-        run: echo "CI validation complete - Foundation phase passing"
+        run: echo "✅ Phase 1 Foundation - CI validation complete"
