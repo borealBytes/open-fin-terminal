@@ -1,0 +1,44 @@
+Category,Bloomberg Function,Description,OFT Analog,Data Source,Access Method,Update Frequency,Limitations,License/Terms,Rate Limits,Fallback Chain
+Equities,DES,Company description and overview,Company Overview,SEC EDGAR company facts,REST API (JSON),Daily,"US companies only, no real-time",Public domain,10 req/sec,SEC EDGAR → Optional providers
+Equities,GP,Price graph/chart,Price Chart,Stooq historical data,CSV download,Daily EOD,"Delayed 15-20min, US equities",Free for personal use,Reasonable use,Stooq → Alpha Vantage (opt) → IEX (opt)
+Equities,FA,Financial analysis/fundamentals,Fundamentals View,SEC EDGAR XBRL,REST API (JSON),Quarterly/Annual,US public companies only,Public domain,10 req/sec,SEC EDGAR → FMP (opt)
+Equities,CN,Company news,News Feed,SEC EDGAR RSS,RSS feed,Real-time filings,SEC filings only,Public domain,Reasonable use,SEC RSS → News APIs (opt)
+Equities,DVD,Dividend history,Dividend Timeline,SEC XBRL + computed,REST API (JSON),Quarterly,From financial statements,Public domain,10 req/sec,Computed from EDGAR
+Equities,SPLC,Stock splits,Corporate Actions,SEC filings + computed,REST API (JSON),Event-driven,From 8-K filings,Public domain,10 req/sec,SEC filings
+Equities,EQS,Equity screener,Stock Screener,NASDAQ listings + EDGAR,Multiple APIs,Daily,Limited fundamentals,Public domain,Combined limits,NASDAQ → SEC → Optional
+Equities,RV,Relative valuation,Valuation Comparison,Computed from EDGAR,Computed,Quarterly,Requires fundamental data,MIT (computed),N/A,EDGAR-based
+Equities,ANR,Analyst recommendations,Not available (OSS),N/A - paid only,N/A,N/A,Requires paid data,N/A,N/A,Optional adapters only
+Options,OMON,Options monitor,Options Dashboard,User data + optional APIs,REST API (opt),Real-time (opt),No free options chains,N/A,Optional only,User data → Optional APIs
+Options,OVME,Option valuation,Options Calculator,Black-Scholes (computed),Client computation,Real-time,Theoretical pricing only,MIT,Local only,Computed
+Options,OVDV,Option Greeks,Greeks Calculator,"Computed (delta, gamma, etc.)",Client computation,Real-time,Requires input parameters,MIT,Local only,Computed
+Options,SKEW,Volatility skew,IV Surface,Computed from chains,Computed,On-demand,Requires options data,MIT,Optional adapter,Optional data → Computed
+Fixed Income,YAS,Yield analysis,Bond Calculator,U.S. Treasury + computed,REST API,Daily 16:00 ET,US Treasuries only,Public domain,No limit,Treasury API
+Fixed Income,BTMM,Government bond monitor,Treasury Dashboard,U.S. Treasury API,REST API (JSON),Daily 16:00 ET,US Treasuries only,Public domain,No limit,Treasury API
+Fixed Income,GC,Government curves,Yield Curve Viewer,U.S. Treasury yield curve,REST API (JSON),Daily 16:00 ET,"1M-30Y maturities, US only",Public domain,No limit,Treasury API
+Fixed Income,DDIS,Debt distribution,Debt Overview,SEC XBRL (debt schedule),REST API (JSON),Quarterly,From financial statements,Public domain,10 req/sec,SEC EDGAR
+Fixed Income,ALLQ,Corporate bond quotes,Not available,N/A,N/A,N/A,Requires market data,N/A,Optional only,Optional adapters
+FX,FX,Foreign exchange rates,FX Dashboard,Frankfurter.app (ECB),REST API (JSON),Daily 16:00 CET,"ECB reference rates, delayed",MIT,No limit,Frankfurter → FRED (opt)
+FX,FXIP,FX implied vol,Not available,N/A,N/A,N/A,Requires market data,N/A,Optional only,Optional adapters
+FX,FXFWD,FX forwards,Not available,N/A,N/A,N/A,Requires market data,N/A,Optional only,Optional adapters
+Commodities,COMD,Commodity prices,Limited,Various public sources,Various,Varies,Very limited free data,Varies,Source-dependent,Public sources → Optional
+Crypto,Crypto Spot,Cryptocurrency prices,Crypto Dashboard,Binance/Coinbase/Kraken,WebSocket + REST,Real-time,Public endpoints only,Exchange ToS,Varies (60+ req/min),Binance → Coinbase → Kraken
+Crypto,Crypto Volume,Cryptocurrency volume,Crypto Volume View,Exchange public APIs,WebSocket + REST,Real-time,Public endpoints,Exchange ToS,Varies,Multiple exchanges
+Macro,ECO,Economic calendar,Economic Calendar,Central bank calendars,RSS/iCal/scraped,Daily,Major central banks,Public,Reasonable use,CB calendars → FRED (opt)
+Macro,ECST,Economic statistics,Macro Dashboard,"ECB SDW, IMF, World Bank, OECD",REST API,Monthly/Quarterly,Publication delays,Public domain,Varies by source,ECB → IMF → World Bank → OECD
+Macro,ECFC,Economic forecasts,Not available,N/A,N/A,N/A,Requires paid data,N/A,Optional only,Optional adapters
+Macro,FED,Federal Reserve,Fed Data,FRED API (optional),REST API,Daily,Requires API key,Public domain,Optional adapter,FRED (opt)
+Portfolio,PORT,Portfolio analytics,Portfolio Analyzer,Computed from positions,Client computation,Real-time,User positions required,MIT,Local only,Computed
+Portfolio,PRTU,Portfolio risk,Risk Metrics,"Computed (VaR, CVaR, etc.)",Client computation,Real-time,Depends on data quality,MIT,Local only,Computed
+Portfolio,PMEN,Performance attribution,Attribution Analysis,Computed,Client computation,Real-time,Requires returns data,MIT,Local only,Computed
+Research,BI,Bloomberg Intelligence,Not available,N/A,N/A,N/A,Proprietary,N/A,N/A,N/A
+Research,BRC,Broker research,Not available,N/A,N/A,N/A,Proprietary,N/A,Optional if accessible,User access only
+Research,NH,News headlines,RSS Aggregator,Public RSS feeds,RSS,Real-time,Limited free sources,Varies,Source-dependent,RSS feeds
+Research,TOP,Top news,Top Stories,Public news sources,RSS,Real-time,Limited coverage,Varies,Source-dependent,Multiple RSS
+Research,N,News search,Filing Search,SEC EDGAR search,REST API,Real-time,SEC filings only,Public domain,Reasonable use,SEC search
+Charting,GP,Price chart,Interactive Chart,Stooq + computed indicators,CSV + computed,EOD,Delayed data,Free use,Reasonable,Stooq → Optional
+Charting,GIP,Intraday chart,Not available (OSS),N/A,N/A,N/A,Requires real-time data,N/A,Optional only,Optional adapters
+Charting,HS,Historical spread,Comparative Chart,Computed,Client,On-demand,Data availability dependent,MIT,Local,Computed
+Technical,Indicators,50+ technical indicators,Technical Studies,Computed,Client,Real-time,None,MIT,Local,Computed
+Data Export,Excel,Excel export,CSV/Excel Export,Client-side,Download,On-demand,CSV format,MIT,Local,Local generation
+Messaging,MSG,Messaging,Not available,N/A,N/A,N/A,Proprietary,N/A,N/A,N/A
+Alerts,ALRT,Price alerts,Alert System,Client or server-based,Background worker,Polling/WebSocket,Client-side only (static),MIT,Local/server,Local → Server (opt)

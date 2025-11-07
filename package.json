@@ -18,13 +18,13 @@
     "type": "git",
     "url": "https://github.com/borealBytes/open-fin-terminal.git"
   },
+  "packageManager": "pnpm@9.12.3",
   "engines": {
     "node": ">=20.0.0",
     "pnpm": ">=9.0.0"
   },
-  "packageManager": "pnpm@9.12.3",
   "scripts": {
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --filter=@open-fin-terminal/web",
     "build": "turbo run build",
     "test": "turbo run test",
     "test:coverage": "turbo run test:coverage",
@@ -35,8 +35,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\"",
     "clean": "turbo run clean && rm -rf node_modules",
-    "export": "turbo run export",
-    "prepare": "husky install"
+    "export": "cd apps/web && pnpm build"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.9",
@@ -46,21 +45,8 @@
     "@typescript-eslint/parser": "^8.11.0",
     "eslint": "^9.14.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-security": "^3.0.1",
-    "husky": "^9.1.6",
-    "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "turbo": "^2.2.3",
     "typescript": "^5.6.3"
-  },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{md,json}": [
-      "prettier --write"
-    ]
   }
 }
