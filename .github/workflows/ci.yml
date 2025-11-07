@@ -34,22 +34,25 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
-      - name: Build
+      - name: Build all packages
         run: pnpm build
 
+      # TODO: Remove continue-on-error once all packages have typecheck configured
       - name: Type check
         run: pnpm typecheck || echo "Type check not configured"
         continue-on-error: true
 
+      # TODO: Remove continue-on-error once all packages have lint configured
       - name: Lint
         run: pnpm lint || echo "Lint not configured"
         continue-on-error: true
 
+      # TODO: Remove continue-on-error once all packages have tests
       - name: Test
         run: pnpm test || echo "Tests not configured"
         continue-on-error: true
 
-      - name: Mark as success
-        run: echo "CI completed successfully"
+      - name: CI validation complete
+        run: echo "CI validation complete - Foundation phase passing"
