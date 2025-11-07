@@ -1,0 +1,7 @@
+{
+  "name": "@open-fin-terminal/docs",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Documentation for Open Financial Terminal",
+  "license": "MIT"
+}
