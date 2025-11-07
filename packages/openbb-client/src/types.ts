@@ -2,8 +2,6 @@
  * Core types for OpenBB Platform integration
  */
 
-import { z } from 'zod';
-
 /**
  * OpenBB Client configuration options
  */

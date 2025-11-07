@@ -4,8 +4,8 @@
  * Provides type-safe access to OpenBB Platform's REST API for financial data.
  */
 
-export { OpenBBClient } from './client';
-export { OpenBBWebSocketClient } from './websocket';
-export { OpenBBError } from './errors';
-export * from './types';
-export * from './schemas';
+export { OpenBBClient } from './client.js';
+export { OpenBBWebSocketClient } from './websocket.js';
+export { OpenBBError } from './errors.js';
+export * from './types.js';
+export * from './schemas.js';
