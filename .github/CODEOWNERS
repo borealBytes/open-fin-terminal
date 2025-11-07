@@ -1,0 +1,8 @@
+# Code owners for automatic review requests
+
+* @borealBytes
+
+# Specific areas
+/packages/adapters/ @borealBytes
+/packages/analytics/ @borealBytes
+/.github/ @borealBytes
