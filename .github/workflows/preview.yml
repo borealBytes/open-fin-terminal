@@ -32,3 +32,14 @@ jobs:
       - uses: rossjrw/pr-preview-action@v1
         with:
           source-dir: apps/web/out
+
+      - name: Comment with preview link
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ✅ Preview deployed!
+
+            View the live preview here: [https://borealbytes.github.io/open-fin-terminal/pr-preview/pr-${{ github.event.pull_request.number }}/](https://borealbytes.github.io/open-fin-terminal/pr-preview/pr-${{ github.event.pull_request.number }}/)
+          header: "PR Preview: Live Link"

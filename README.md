@@ -23,6 +23,7 @@
 - Data adapter interfaces
 - UI component library
 - Analytics engine foundation
+- Optional enhanced adapter support (OpenBB Platform)
 
 ## 🎯 Project Goals
 
@@ -48,6 +49,7 @@ open-fin-terminal/
 │   ├── adapters/         # 🚧 Adapter interface definitions (Phase 2)
 │   ├── adapters-oss/     # 🚧 Default no-account data adapters (Phase 3)
 │   ├── adapters-opt/     # 🚧 Optional credentialed adapters (Phase 8)
+│   ├── openbb-client/    # ✅ Optional OpenBB Platform integration (Phase 2)
 │   ├── analytics/        # 🚧 Function engine (Phase 5)
 │   ├── ui/               # 🚧 Shared UI components (Phase 2)
 │   ├── workers/          # 🚧 Web workers for analytics (Phase 2)
@@ -106,12 +108,14 @@ No installation required: https://borealbytes.github.io/open-fin-terminal/
 
 See [feature-coverage-matrix.csv](./packages/docs/feature-coverage-matrix.csv) for detailed mapping.
 
-## 📊 Data Sources (Planned)
+## 📊 Data Sources
 
-### Free Default Sources
+### 🆓 Built-in Free Sources (No Setup Required)
+
+These adapters work out-of-the-box with no additional software, accounts, or API keys required:
 
 **Equities & ETFs**
-- OHLCV (Delayed): Stooq CSV endpoints
+- OHLCV (Delayed): Stooq CSV endpoints, Yahoo Finance
 - Listings: NASDAQ Trader symbol directories
 - Fundamentals: SEC EDGAR (company facts JSON, XBRL)
 
@@ -133,9 +137,55 @@ See [feature-coverage-matrix.csv](./packages/docs/feature-coverage-matrix.csv) f
 - Filings: SEC EDGAR RSS feeds
 - News: Public RSS feeds (where permitted)
 
-### Optional (User Credentials)
-- IEX Cloud, Polygon, Alpha Vantage, FRED, Trading Economics
-- See `packages/adapters-opt` for implementation (Phase 8)
+> **Status**: Phase 3 implementation planned. See `packages/adapters-oss/` for TypeScript implementations.
+
+### 🔌 Optional Enhanced Adapters (Require Setup)
+
+For advanced users who want enhanced data coverage and additional providers:
+
+#### OpenBB Platform Integration
+
+The `@open-fin-terminal/openbb-client` package provides optional integration with [OpenBB Platform](https://openbb.co/), enabling access to 100+ financial data providers through a unified TypeScript SDK.
+
+**Benefits:**
+- Access to premium providers (with your own API keys): Polygon, Alpha Vantage, IEX Cloud, FRED, and more
+- Unified API for multiple data sources
+- Advanced analytics and data transformations
+- WebSocket support for real-time streaming
+
+**Requirements:**
+- Python 3.8+ installed locally
+- OpenBB Platform: `pip install openbb`
+- Running OpenBB API server: `openbb-api` (serves at http://127.0.0.1:6900)
+
+**Usage:**
+
+```typescript
+import { OpenBBClient } from '@open-fin-terminal/openbb-client';
+
+// Only works if OpenBB server is running
+const client = new OpenBBClient({
+  baseUrl: 'http://127.0.0.1:6900',
+});
+
+const data = await client.equity.price.historical({
+  symbol: 'AAPL',
+  provider: 'polygon', // Requires your Polygon API key configured in OpenBB
+});
+```
+
+**Setup Documentation**: See [`packages/openbb-client/README.md`](./packages/openbb-client/README.md)
+
+> **Note**: OpenBB integration is **completely optional**. The terminal will work perfectly with free built-in adapters. This is provided for power users who want to leverage existing OpenBB Platform setups.
+
+#### Other Optional Adapters (Planned - Phase 8)
+- IEX Cloud (direct TypeScript adapter)
+- Alpha Vantage (direct TypeScript adapter)
+- Polygon.io (direct TypeScript adapter)
+- FRED (Federal Reserve data, requires free API key)
+- Trading Economics
+
+See `packages/adapters-opt/` for planned implementations.
 
 ## 🎨 Terminal Features (Planned)
 
@@ -194,6 +244,7 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for:
 - [Feature Coverage Matrix](./packages/docs/feature-coverage-matrix.csv) ✅
 - [Gap Analysis](./packages/docs/gap-analysis.md) ✅
 - [Data Source Catalog](./packages/docs/data-source-catalog.md) (Coming in Phase 3)
+- [OpenBB Integration Guide](./packages/openbb-client/README.md) ✅
 - [Contributing Guide](./CONTRIBUTING.md) ✅
 - [Security Policy](./SECURITY.md) ✅
 - [Support Resources](./SUPPORT.md) ✅
@@ -201,13 +252,13 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for:
 ## 🗺️ Roadmap
 
 - [x] **Phase 1**: Core terminal UI foundation and repository infrastructure ✅
-- [ ] **Phase 2**: Core packages (adapters interface, UI components, workers)
-- [ ] **Phase 3**: Default OSS data adapters (SEC EDGAR, Stooq, Treasury, etc.)
+- [ ] **Phase 2**: Core packages (adapters interface, UI components, workers, optional OpenBB client)
+- [ ] **Phase 3**: Default OSS data adapters (SEC EDGAR, Stooq, Treasury, etc.) - TypeScript implementations
 - [ ] **Phase 4**: Web application enhancement (command palette, workspaces)
 - [ ] **Phase 5**: Analytics engine (technicals, options, portfolio)
 - [ ] **Phase 6**: Charts and visualizations (uPlot, indicators)
 - [ ] **Phase 7**: Testing and quality assurance (coverage, E2E, a11y)
-- [ ] **Phase 8**: Optional authenticated data adapters
+- [ ] **Phase 8**: Optional authenticated data adapters (direct TypeScript implementations)
 - [ ] **Phase 9**: Self-hosted server option with Redis caching
 
 See [PR #1](https://github.com/borealBytes/open-fin-terminal/pull/1) for detailed Phase 1 completion.
@@ -242,8 +293,9 @@ This project would not be possible without:
 - NASDAQ Trader for symbol directories
 - Frankfurter.app for FX data
 - Stooq for historical price data
+- OpenBB Platform for optional enhanced data access
 - All open-source contributors
 
 ---
 
-**Disclaimer**: This is an independent open-source project and is not affiliated with, endorsed by, or sponsored by Bloomberg L.P. or any of its affiliates. Bloomberg Terminal® is a registered trademark of Bloomberg Finance L.P.
+**Disclaimer**: This is an independent open-source project and is not affiliated with, endorsed by, or sponsored by Bloomberg L.P., OpenBB, or any of its affiliates. Bloomberg Terminal® is a registered trademark of Bloomberg Finance L.P.
