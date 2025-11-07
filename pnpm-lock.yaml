@@ -1,0 +1,11 @@
+lockfileVersion: 6.0
+
+importers:
+  .:
+    specifiers:
+      turbo: ^2.2.3
+      typescript: ^5.6.3
+    dependencies: {}
+    devDependencies:
+      turbo: 2.2.3
+      typescript: 5.6.3
