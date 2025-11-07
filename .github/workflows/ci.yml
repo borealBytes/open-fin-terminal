@@ -37,18 +37,18 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Build
-        run: pnpm build || echo "Build step had issues but continuing"
+        run: pnpm build
 
       - name: Type check
-        run: pnpm typecheck || echo "Type check not fully configured yet"
+        run: pnpm typecheck || echo "Type check not configured"
         continue-on-error: true
 
       - name: Lint
-        run: pnpm lint || echo "Lint not fully configured yet"
+        run: pnpm lint || echo "Lint not configured"
         continue-on-error: true
 
       - name: Test
-        run: pnpm test || echo "Tests not fully configured yet"
+        run: pnpm test || echo "Tests not configured"
         continue-on-error: true
 
       - name: Mark as success
