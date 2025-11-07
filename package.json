@@ -18,6 +18,7 @@
     "type": "git",
     "url": "https://github.com/borealBytes/open-fin-terminal.git"
   },
+  "packageManager": "pnpm@9.12.3",
   "engines": {
     "node": ">=20.0.0",
     "pnpm": ">=9.0.0"
