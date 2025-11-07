@@ -22,7 +22,6 @@
     "node": ">=20.0.0",
     "pnpm": ">=9.0.0"
   },
-  "packageManager": "pnpm@9.12.3",
   "scripts": {
     "dev": "turbo run dev --filter=@open-fin-terminal/web",
     "build": "turbo run build --force",
