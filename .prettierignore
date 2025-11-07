@@ -1,0 +1,11 @@
+node_modules
+dist
+.next
+out
+coverage
+playwright-report
+test-results
+.turbo
+pnpm-lock.yaml
+*.min.js
+*.min.css
