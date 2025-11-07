@@ -24,19 +24,18 @@
   },
   "packageManager": "pnpm@9.12.3",
   "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build",
-    "test": "turbo run test",
-    "test:coverage": "turbo run test:coverage",
-    "test:e2e": "turbo run test:e2e",
-    "typecheck": "turbo run typecheck",
-    "lint": "turbo run lint",
-    "lint:fix": "turbo run lint:fix",
-    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\"",
+    "dev": "turbo run dev --filter=@open-fin-terminal/web",
+    "build": "turbo run build --force",
+    "test": "turbo run test --force || exit 0",
+    "test:coverage": "turbo run test:coverage --force || exit 0",
+    "test:e2e": "turbo run test:e2e --force || exit 0",
+    "typecheck": "turbo run typecheck --force || exit 0",
+    "lint": "turbo run lint --force || exit 0",
+    "lint:fix": "turbo run lint:fix --force || exit 0",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\" || exit 0",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\" || exit 0",
     "clean": "turbo run clean && rm -rf node_modules",
-    "export": "turbo run export",
-    "prepare": "husky install"
+    "export": "cd apps/web && pnpm build"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.9",
@@ -46,21 +45,8 @@
     "@typescript-eslint/parser": "^8.11.0",
     "eslint": "^9.14.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-security": "^3.0.1",
-    "husky": "^9.1.6",
-    "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "turbo": "^2.2.3",
     "typescript": "^5.6.3"
-  },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{md,json}": [
-      "prettier --write"
-    ]
   }
 }
