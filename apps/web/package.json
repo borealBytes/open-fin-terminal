@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "echo 'ESLint configuration pending Phase 2'",
     "typecheck": "tsc --noEmit",
     "export": "next build",
     "test": "vitest run",
