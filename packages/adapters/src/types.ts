@@ -7,7 +7,7 @@
  * @packageDocumentation
  */
 
-import type { Quote, HistoricalPrice, Fundamentals, OHLCV } from '@open-fin-terminal/shared';
+import type { Quote, HistoricalPrice, Fundamentals } from '@open-fin-terminal/shared';
 
 /**
  * Adapter type classification.
