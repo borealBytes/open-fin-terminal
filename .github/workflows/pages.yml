@@ -36,13 +36,15 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Build
         run: pnpm build
 
       - name: Export static site
-        run: pnpm export
+        run: |
+          cd apps/web
+          pnpm export
         env:
           NEXT_PUBLIC_BASE_PATH: /open-fin-terminal
 

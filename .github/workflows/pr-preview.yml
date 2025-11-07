@@ -27,13 +27,15 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Build
         run: pnpm build
 
       - name: Export static site
-        run: pnpm export
+        run: |
+          cd apps/web
+          pnpm export
         env:
           NEXT_PUBLIC_BASE_PATH: /pr-${{ github.event.pull_request.number }}
 
@@ -61,14 +63,34 @@ jobs:
             To view the preview:
             1. Download the artifact from the link above
             2. Extract the zip file
-            3. Serve the files with a static web server
+            3. Serve the files with a static web server (e.g., \`npx serve\`)
             
             Or wait for the GitHub Pages deployment after merge.
             `;
             
-            github.rest.issues.createComment({
+            // Try to find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
               issue_number: pr_number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: body
             });
+            
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && comment.body.includes('PR Preview')
+            );
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                comment_id: botComment.id,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                issue_number: pr_number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+            }
