@@ -3,5 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "description": "Documentation for Open Financial Terminal",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "build": "echo 'Documentation package - no build required'",
+    "lint": "echo 'Documentation package - no linting required'",
+    "typecheck": "echo 'Documentation package - no typecheck required'",
+    "test": "echo 'Documentation package - no tests'",
+    "clean": "echo 'Documentation package - no cleanup required'"
+  }
 }
