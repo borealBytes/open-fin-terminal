@@ -57,32 +57,34 @@ export class TreasuryAdapter implements Partial<DataAdapter> {
   }
 
   async healthCheck(): Promise<HealthCheck> {
+    // The mock expects 'healthy'/'unhealthy' and a 'message' field matching the expectation
     try {
       const response = await fetch(`${API_BASE_URL}/v2/accounting/od/avg_interest_rates?page[size]=1`, {
         method: 'HEAD',
       });
-
       return {
         adapter: this.name,
-        status: response.ok ? 'healthy' : 'degraded',
+        status: response.ok ? 'healthy' : 'unhealthy',
         latency: 0,
         successRate: response.ok ? 1 : 0,
         lastChecked: new Date(),
+        message: response.ok ? 'Treasury API is accessible' : `Treasury API error: ${response.status}`,
         error: response.ok ? undefined : `Treasury API error: ${response.status} ${response.statusText}`,
       };
     } catch (error) {
       return {
         adapter: this.name,
-        status: 'unavailable',
+        status: 'unhealthy',
         latency: 0,
         successRate: 0,
         lastChecked: new Date(),
+        message: error instanceof Error ? 'Network error' : 'Unknown error',
         error: error instanceof Error ? error.message : 'Unknown error',
       };
     }
   }
 
-  getCapabilities(): AdapterCapabilities {
+  getCapabilities(): AdapterCapabilities & {yieldCurve: boolean, macro: boolean} {
     return {
       quotes: false,
       historical: false,
@@ -93,6 +95,8 @@ export class TreasuryAdapter implements Partial<DataAdapter> {
       crypto: false,
       news: false,
       realtime: false,
+      yieldCurve: true,
+      macro: true,
     };
   }
 
