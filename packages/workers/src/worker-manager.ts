@@ -33,11 +33,11 @@ export class WorkerManager {
     this.workers.set(worker, metadata);
 
     // Set up error handling
-    worker.addEventListener('error', (event) => {
-      this.handleError(worker, new Error(event.message));
+    worker.addEventListener('error', (_event) => {
+      this.handleError(worker, new Error(_event.message));
     });
 
-    worker.addEventListener('messageerror', (event) => {
+    worker.addEventListener('messageerror', (_event) => {
       this.handleError(worker, new Error('Message deserialization error'));
     });
 
@@ -115,7 +115,7 @@ export class WorkerManager {
   getAllMetadata(): WorkerMetadata[] {
     return Array.from(this.workers.values());
   }
-
+  
   /**
    * Get count of workers by status.
    */
