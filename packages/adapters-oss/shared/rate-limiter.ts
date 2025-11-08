@@ -1,16 +1,9 @@
-/**
- * Token bucket rate limiter for API requests.
- * Compatible with both Node and browser environments.
- */
+import { setTimeout } from 'timers';
 
 export interface RateLimiterConfig {
   tokensPerSecond: number;
   capacity: number;
 }
-
-// Ensure TS finds setTimeout in both Node and browser type environments:
-/// <reference lib="dom" />
-/// <reference lib="esnext.asynciterable" />
 
 export class TokenBucketLimiter {
   private tokens: number;
@@ -33,7 +26,7 @@ export class TokenBucketLimiter {
     }
     const tokensNeeded = tokens - this.tokens;
     const waitMs = (tokensNeeded / this.tokensPerSecond) * 1000;
-    await new Promise<void>((resolve) => setTimeout(resolve, waitMs));
+    await new Promise<void>((resolve) => setTimeout(() => resolve(), waitMs));
     this.refillTokens();
     this.tokens -= tokens;
   }
