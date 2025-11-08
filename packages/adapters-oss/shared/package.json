@@ -1,0 +1,19 @@
+{
+  "name": "@open-fin-terminal/adapters-oss-shared",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "scripts": {
+    "build": "tsc --build",
+    "dev": "tsc --build --watch",
+    "test": "vitest run"
+  },
+  "keywords": ["finance", "openfin", "adapter", "oss", "utils", "rateLimiter", "cache"],
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.0.4"
+  }
+}
