@@ -15,7 +15,6 @@ import type {
 } from '@open-fin-terminal/adapters';
 import { AdapterError } from '@open-fin-terminal/adapters';
 import type { Quote, HistoricalPrice, Fundamentals, OHLCV } from '@open-fin-terminal/shared';
-import type { StooqCSVRow } from './types';
 
 const STOOQ_CSV_BASE = 'https://stooq.com/q/d/l';
 const USER_AGENT = 'Open Financial Terminal (https://github.com/borealBytes/open-fin-terminal)';
