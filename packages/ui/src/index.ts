@@ -5,5 +5,8 @@
  * Provides accessible, keyboard-navigable components with dark theme support.
  */
 
-// Components will be exported here as they are implemented
+// Types
 export * from './types';
+
+// Components
+export * from './components/Button';
