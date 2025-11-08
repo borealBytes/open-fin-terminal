@@ -1,9 +1,20 @@
-import { setTimeout } from 'timers';
+/**
+ * Token bucket rate limiter for API requests.
+ * Compatible with both Node and browser environments.
+ */
 
 export interface RateLimiterConfig {
   tokensPerSecond: number;
   capacity: number;
 }
+
+// Use globalThis.setTimeout for universal compatibility
+const setTimeoutGlobal: typeof setTimeout =
+  typeof globalThis !== 'undefined' && typeof globalThis.setTimeout === 'function'
+    ? globalThis.setTimeout
+    : ((fn: (...args: any[]) => void, ms: number) => {
+        throw new Error('setTimeout is not available in this environment');
+      });
 
 export class TokenBucketLimiter {
   private tokens: number;
@@ -26,7 +37,7 @@ export class TokenBucketLimiter {
     }
     const tokensNeeded = tokens - this.tokens;
     const waitMs = (tokensNeeded / this.tokensPerSecond) * 1000;
-    await new Promise<void>((resolve) => setTimeout(() => resolve(), waitMs));
+    await new Promise<void>((resolve) => setTimeoutGlobal(resolve, waitMs));
     this.refillTokens();
     this.tokens -= tokens;
   }
