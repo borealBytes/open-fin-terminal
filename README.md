@@ -27,14 +27,19 @@
 - ✅ Optional OpenBB Platform client
 - ✅ Comprehensive architecture documentation
 
-**🚧 Phase 3 In Progress** - Free data adapters (PR #7):
-- ✅ Package scaffolding and workspace structure
-- 🚧 SEC EDGAR adapter (company fundamentals)
-- 🚧 Yahoo Finance adapter (OHLCV, historical)
-- 🚧 Stooq adapter (CSV fallback)
-- 🚧 Shared utilities (rate limiter, cache, validators)
-- **Target**: ~3,000 LOC, 80+ tests, ≥85% coverage
-- **Timeline**: 5-7 days (per [Phase 3 Workplan](./docs/PHASE3_WORKPLAN.md))
+**✅ Phase 3 Part 1 Complete** - Equity data adapters (PR #7 merged Nov 8, 2025):
+- ✅ SEC EDGAR adapter (company fundamentals from 10-K/10-Q filings)
+- ✅ Yahoo Finance adapter (delayed quotes 15-20 min, historical OHLCV)
+- ✅ Stooq adapter (CSV fallback for historical data)
+- ✅ Shared utilities (rate limiter, cache, validators)
+- **Result**: 5,000+ LOC, 150+ tests, ≥85% coverage
+- **Feature Coverage**: Increased from 60% → ~70% (free tier)
+
+**🚧 Phase 3 Parts 2-3 Planned** - Macro and crypto adapters:
+- 📋 PR #8: Macro adapters (Treasury, ECB, IMF, World Bank, OECD) - **Next Up**
+- 📋 PR #9: Crypto adapters (Binance, Coinbase, Kraken) + integration
+- **Target**: ~85% free tier feature coverage
+- **Timeline**: 2-3 weeks (per [Phase 3 Workplan](./docs/PHASE3_WORKPLAN.md))
 
 ## 🎯 Project Goals
 
@@ -58,7 +63,7 @@ open-fin-terminal/
 ├── packages/
 │   ├── shared/           # ✅ Domain types, schemas, utilities
 │   ├── adapters/         # ✅ Adapter interface definitions (Phase 2 Complete)
-│   ├── adapters-oss/     # 🚧 Default no-account data adapters (Phase 3 - In Progress)
+│   ├── adapters-oss/     # 🚧 Default no-account data adapters (Phase 3 - Part 1 Complete)
 │   ├── adapters-opt/     # 🚧 Optional credentialed adapters (Phase 8)
 │   ├── openbb-client/    # ✅ Optional OpenBB Platform integration
 │   ├── analytics/        # 🚧 Function engine (Phase 5)
@@ -115,9 +120,10 @@ No installation required: https://borealbytes.github.io/open-fin-terminal/
 | **Portfolio** | PORT, PRTU, PMEN | 90% | 95% |
 | **Charting** | GP, HS, Indicators | 70% | 90% |
 | **News** | CN, TOP, N | 40% | 60% |
-| **Overall** | **43+ functions** | **~60%** | **~85%** |
+| **Overall** | **43+ functions** | **~70%** | **~85%** |
 
-> **Phase 3 Target**: Increase free parity to ~70% with equity adapters (SEC EDGAR, Yahoo Finance, Stooq)
+> **Current**: ~70% free tier coverage (Phase 3 Part 1 complete)  
+> **Target**: ~85% free tier coverage (after Phase 3 Parts 2-3)
 
 See [feature-coverage-matrix.csv](./packages/docs/feature-coverage-matrix.csv) for detailed mapping.
 
@@ -128,29 +134,29 @@ See [feature-coverage-matrix.csv](./packages/docs/feature-coverage-matrix.csv) f
 These adapters work out-of-the-box with no additional software, accounts, or API keys required:
 
 **Equities & ETFs**
-- OHLCV (Delayed): Stooq CSV endpoints, Yahoo Finance
-- Listings: NASDAQ Trader symbol directories
-- Fundamentals: SEC EDGAR (company facts JSON, XBRL)
+- OHLCV (Delayed 15-20 min): Yahoo Finance
+- Historical Data: Yahoo Finance, Stooq (CSV fallback)
+- Fundamentals: SEC EDGAR (company facts JSON from 10-K/10-Q filings)
 
-**Fixed Income**
+**Fixed Income** (Planned - Phase 3 Part 2)
 - Sovereign Curves: U.S. Treasury yield curve APIs
 - Auctions: U.S. Treasury auction data
 
-**Macroeconomic**
+**Macroeconomic** (Planned - Phase 3 Part 2)
 - Time Series: ECB SDW, IMF, World Bank, OECD
 - Calendars: Central bank release calendars
 
-**Foreign Exchange**
+**Foreign Exchange** (Planned)
 - Rates: Frankfurter.app (ECB reference rates)
 
-**Cryptocurrency**
-- Spot/Trades: Binance, Coinbase, Kraken public WebSockets
+**Cryptocurrency** (Planned - Phase 3 Part 3)
+- Spot/Trades: Binance, Coinbase, Kraken public APIs
 
 **News & Filings**
 - Filings: SEC EDGAR RSS feeds
 - News: Public RSS feeds (where permitted)
 
-> **Status**: Phase 3 implementation **in progress** (PR #7). Adapter interface completed in Phase 2. Equity adapters (SEC EDGAR, Yahoo Finance, Stooq) currently being implemented. See `packages/adapters-oss/` for implementation progress.
+> **Status**: Phase 3 Part 1 **complete** (PR #7 merged Nov 8). Equity adapters (SEC EDGAR, Yahoo Finance, Stooq) are production-ready with 150+ tests and ≥85% coverage. See `packages/adapters-oss/` for implementations.
 
 ### 🔌 Optional Enhanced Adapters (Require Setup)
 
@@ -258,7 +264,8 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for:
 - [Phase 3 Workplan](./docs/PHASE3_WORKPLAN.md) ✅
 - [Feature Coverage Matrix](./packages/docs/feature-coverage-matrix.csv) ✅
 - [Gap Analysis](./packages/docs/gap-analysis.md) ✅
-- [Data Source Catalog](./packages/docs/data-source-catalog.md) (In Progress - Phase 3)
+- [Architectural Decisions](./DECISIONS.md) ✅
+- [Data Source Catalog](./packages/docs/data-source-catalog.md) (Planned - Phase 3 Part 3)
 - [OpenBB Integration Guide](./packages/openbb-client/README.md) ✅
 - [Contributing Guide](./CONTRIBUTING.md) ✅
 - [Security Policy](./SECURITY.md) ✅
@@ -268,10 +275,10 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for:
 
 - [x] **Phase 1**: Core terminal UI foundation and repository infrastructure ✅
 - [x] **Phase 2**: Core packages (adapters interface, UI components, workers, OpenBB client) ✅
-- [ ] **Phase 3**: Default OSS data adapters - **IN PROGRESS** 🚧
-  - [ ] PR #7: Equity adapters (SEC EDGAR, Yahoo Finance, Stooq) - Implementation underway
-  - [ ] PR #8: Macro adapters (Treasury, ECB, IMF, World Bank, OECD)
-  - [ ] PR #9: Crypto adapters (Binance, Coinbase, Kraken)
+- [ ] **Phase 3**: Default OSS data adapters
+  - [x] **Part 1**: Equity adapters (SEC EDGAR, Yahoo Finance, Stooq) ✅ **MERGED Nov 8, 2025**
+  - [ ] **Part 2**: Macro adapters (Treasury, ECB, IMF, World Bank, OECD) 📋 **Next up**
+  - [ ] **Part 3**: Crypto adapters (Binance, Coinbase, Kraken) + integration 📋
 - [ ] **Phase 4**: Web application enhancement (command palette, workspaces)
 - [ ] **Phase 5**: Analytics engine (technicals, options, portfolio)
 - [ ] **Phase 6**: Charts and visualizations (uPlot, indicators)
@@ -285,9 +292,11 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for:
 - [PR #2](https://github.com/borealBytes/open-fin-terminal/pull/2) - OpenBB client integration ✅
 - [PR #4](https://github.com/borealBytes/open-fin-terminal/pull/4) - Phase 2 Part 1 (adapter interfaces) ✅
 - [PR #5](https://github.com/borealBytes/open-fin-terminal/pull/5) - Phase 2 Part 2 (UI components, workers) ✅
-- [PR #7](https://github.com/borealBytes/open-fin-terminal/pull/7) - Phase 3 Part 1 (equity adapters) 🚧
-- [Issue #3](https://github.com/borealBytes/open-fin-terminal/issues/3) - Phase 2 tracking (Complete)
-- [Issue #6](https://github.com/borealBytes/open-fin-terminal/issues/6) - Phase 3 tracking (In Progress)
+- [PR #7](https://github.com/borealBytes/open-fin-terminal/pull/7) - Phase 3 Part 1 (equity adapters) ✅ **MERGED Nov 8, 2025**
+- [PR #12](https://github.com/borealBytes/open-fin-terminal/pull/12) - Tracking infrastructure (in progress) 🚧
+- [Issue #3](https://github.com/borealBytes/open-fin-terminal/issues/3) - Phase 2 tracking (CLOSED - Complete)
+- [Issue #6](https://github.com/borealBytes/open-fin-terminal/issues/6) - Phase 3 tracking (Part 1 Complete)
+- [Issue #11](https://github.com/borealBytes/open-fin-terminal/issues/11) - Project status and next steps ✅
 
 ## 📝 License
 
