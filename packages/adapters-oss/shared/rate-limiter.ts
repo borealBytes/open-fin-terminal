@@ -8,6 +8,10 @@ export interface RateLimiterConfig {
   capacity: number;
 }
 
+// This file relies on either Node.js or browser globals for setTimeout.
+// If necessary for typecheck, uncomment the following and/or add global type import:
+// declare function setTimeout(callback: (...args: any[]) => void, ms: number, ...args: any[]): number;
+
 export class TokenBucketLimiter {
   private tokens: number;
   private lastRefill: number;
@@ -29,7 +33,7 @@ export class TokenBucketLimiter {
     }
     const tokensNeeded = tokens - this.tokens;
     const waitMs = (tokensNeeded / this.tokensPerSecond) * 1000;
-    await new Promise((resolve) => setTimeout(() => resolve(undefined), waitMs));
+    await new Promise<void>((resolve) => setTimeout(() => resolve(), waitMs));
     this.refillTokens();
     this.tokens -= tokens;
   }
