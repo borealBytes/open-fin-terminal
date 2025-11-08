@@ -1,0 +1,164 @@
+{
+  "cik": "0000320193",
+  "entityName": "Apple Inc.",
+  "facts": {
+    "us-gaap": {
+      "Assets": {
+        "label": "Assets",
+        "description": "Sum of the carrying amounts as of the balance sheet date of all assets.",
+        "units": {
+          "USD": [
+            {
+              "end": "2023-09-30",
+              "val": 352755000000,
+              "accn": "0000320193-23-000106",
+              "fy": 2023,
+              "fp": "FY",
+              "form": "10-K",
+              "filed": "2023-11-03"
+            },
+            {
+              "end": "2022-09-24",
+              "val": 352583000000,
+              "accn": "0000320193-22-000108",
+              "fy": 2022,
+              "fp": "FY",
+              "form": "10-K",
+              "filed": "2022-10-28"
+            }
+          ]
+        }
+      },
+      "Liabilities": {
+        "label": "Liabilities",
+        "description": "Sum of the carrying amounts as of the balance sheet date of all liabilities.",
+        "units": {
+          "USD": [
+            {
+              "end": "2023-09-30",
+              "val": 290437000000,
+              "accn": "0000320193-23-000106",
+              "fy": 2023,
+              "fp": "FY",
+              "form": "10-K",
+              "filed": "2023-11-03"
+            },
+            {
+              "end": "2022-09-24",
+              "val": 302083000000,
+              "accn": "0000320193-22-000108",
+              "fy": 2022,
+              "fp": "FY",
+              "form": "10-K",
+              "filed": "2022-10-28"
+            }
+          ]
+        }
+      },
+      "StockholdersEquity": {
+        "label": "Stockholders' Equity",
+        "description": "Total of all stockholders' equity (deficit) items.",
+        "units": {
+          "USD": [
+            {
+              "end": "2023-09-30",
+              "val": 62146000000,
+              "accn": "0000320193-23-000106",
+              "fy": 2023,
+              "fp": "FY",
+              "form": "10-K",
+              "filed": "2023-11-03"
+            },
+            {
+              "end": "2022-09-24",
+              "val": 50672000000,
+              "accn": "0000320193-22-000108",
+              "fy": 2022,
+              "fp": "FY",
+              "form": "10-K",
+              "filed": "2022-10-28"
+            }
+          ]
+        }
+      },
+      "Revenues": {
+        "label": "Revenues",
+        "description": "Amount of revenue recognized from goods sold, services rendered, insurance premiums, or other activities.",
+        "units": {
+          "USD": [
+            {
+              "end": "2023-09-30",
+              "val": 383285000000,
+              "accn": "0000320193-23-000106",
+              "fy": 2023,
+              "fp": "FY",
+              "form": "10-K",
+              "filed": "2023-11-03"
+            },
+            {
+              "end": "2022-09-24",
+              "val": 394328000000,
+              "accn": "0000320193-22-000108",
+              "fy": 2022,
+              "fp": "FY",
+              "form": "10-K",
+              "filed": "2022-10-28"
+            }
+          ]
+        }
+      },
+      "NetIncomeLoss": {
+        "label": "Net Income (Loss)",
+        "description": "The portion of profit or loss for the period, net of income taxes.",
+        "units": {
+          "USD": [
+            {
+              "end": "2023-09-30",
+              "val": 96995000000,
+              "accn": "0000320193-23-000106",
+              "fy": 2023,
+              "fp": "FY",
+              "form": "10-K",
+              "filed": "2023-11-03"
+            },
+            {
+              "end": "2022-09-24",
+              "val": 99803000000,
+              "accn": "0000320193-22-000108",
+              "fy": 2022,
+              "fp": "FY",
+              "form": "10-K",
+              "filed": "2022-10-28"
+            }
+          ]
+        }
+      },
+      "NetCashProvidedByUsedInOperatingActivities": {
+        "label": "Net Cash Provided by (Used in) Operating Activities",
+        "description": "Amount of cash inflow (outflow) from operating activities.",
+        "units": {
+          "USD": [
+            {
+              "end": "2023-09-30",
+              "val": 110543000000,
+              "accn": "0000320193-23-000106",
+              "fy": 2023,
+              "fp": "FY",
+              "form": "10-K",
+              "filed": "2023-11-03"
+            },
+            {
+              "end": "2022-09-24",
+              "val": 122151000000,
+              "accn": "0000320193-22-000108",
+              "fy": 2022,
+              "fp": "FY",
+              "form": "10-K",
+              "filed": "2022-10-28"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
