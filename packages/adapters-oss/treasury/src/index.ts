@@ -13,4 +13,4 @@
  */
 
 export { TreasuryAdapter } from './adapter';
-export { TreasuryYieldCurve, TreasuryRate, TreasuryMaturity } from './types';
+export type { TreasuryYieldCurve, TreasuryRate, TreasuryMaturity } from './types';
