@@ -14,7 +14,7 @@ import type {
   FundamentalsParams,
 } from '@open-fin-terminal/adapters';
 import { AdapterError } from '@open-fin-terminal/adapters';
-import type { Quote, HistoricalPrice, Fundamentals } from '@open-fin-terminal/shared';
+import type { Quote, HistoricalPrice, Fundamentals, OHLCV } from '@open-fin-terminal/shared';
 import type { StooqCSVRow } from './types';
 
 const STOOQ_CSV_BASE = 'https://stooq.com/q/d/l';
@@ -136,7 +136,7 @@ export class StooqAdapter implements DataAdapter {
       const csvText = await response.text();
       
       // Parse CSV
-      const prices = this.parseCSV(csvText, symbol);
+      const prices = this.parseCSV(csvText);
 
       return prices;
     } catch (error) {
@@ -166,7 +166,7 @@ export class StooqAdapter implements DataAdapter {
   /**
    * Parse Stooq CSV format.
    */
-  private parseCSV(csvText: string, symbol: string): HistoricalPrice[] {
+  private parseCSV(csvText: string): HistoricalPrice[] {
     const lines = csvText.trim().split('\n');
     
     if (lines.length < 2) {
@@ -191,14 +191,17 @@ export class StooqAdapter implements DataAdapter {
         continue;
       }
 
-      prices.push({
-        symbol,
-        timestamp: new Date(date),
+      const ohlcv: OHLCV = {
         open: parseFloat(open),
         high: parseFloat(high),
         low: parseFloat(low),
         close: parseFloat(close),
-        volume: parseInt(volume, 10),
+        volume: parseInt(volume, 10)
+      };
+
+      prices.push({
+        date: new Date(date),
+        ohlcv
       });
     }
 
