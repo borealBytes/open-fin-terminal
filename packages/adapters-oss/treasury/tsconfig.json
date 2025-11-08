@@ -5,9 +5,9 @@
     "rootDir": "./src",
     "composite": true,
     "noEmit": false,
-    "declaration": false,
-    "declarationMap": false
+    "incremental": false
   },
-  "include": ["src/**/*", "src/**/*.ts"],
+  "files": ["src/index.ts", "src/adapter.ts", "src/types.ts"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }
