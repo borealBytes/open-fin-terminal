@@ -1,6 +1,7 @@
 /**
  * Token bucket rate limiter for API requests.
- * Compatible with both Node and browser environments.
+ * Best-practice cross-platform: use ReturnType<typeof setTimeout> for timer type.
+ * Compatible with both Node.js and browsers. No import/require, zero global type conflicts.
  */
 
 export interface RateLimiterConfig {
@@ -8,19 +9,12 @@ export interface RateLimiterConfig {
   capacity: number;
 }
 
-// Use globalThis.setTimeout for universal compatibility
-const setTimeoutGlobal: typeof setTimeout =
-  typeof globalThis !== 'undefined' && typeof globalThis.setTimeout === 'function'
-    ? globalThis.setTimeout
-    : ((fn: (...args: any[]) => void, ms: number) => {
-        throw new Error('setTimeout is not available in this environment');
-      });
-
 export class TokenBucketLimiter {
   private tokens: number;
   private lastRefill: number;
   private readonly tokensPerSecond: number;
   private readonly capacity: number;
+  private timerRef: ReturnType<typeof setTimeout> | null = null;
 
   constructor(tokensPerSecond: number = 10) {
     this.tokensPerSecond = tokensPerSecond;
@@ -37,7 +31,12 @@ export class TokenBucketLimiter {
     }
     const tokensNeeded = tokens - this.tokens;
     const waitMs = (tokensNeeded / this.tokensPerSecond) * 1000;
-    await new Promise<void>((resolve) => setTimeoutGlobal(resolve, waitMs));
+    await new Promise<void>((resolve) => {
+      this.timerRef = setTimeout(() => {
+        this.timerRef = null;
+        resolve();
+      }, waitMs);
+    });
     this.refillTokens();
     this.tokens -= tokens;
   }
@@ -58,5 +57,9 @@ export class TokenBucketLimiter {
   reset(): void {
     this.tokens = this.capacity;
     this.lastRefill = Date.now();
+    if (this.timerRef) {
+      clearTimeout(this.timerRef);
+      this.timerRef = null;
+    }
   }
 }
