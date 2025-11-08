@@ -86,7 +86,7 @@ describe('SECEdgarAdapter', () => {
       const health = await adapter.healthCheck();
       
       expect(health.status).toBe('unavailable');
-    });
+    }, 10000); // Increase test timeout to 10s to allow for 5s adapter timeout + overhead
   });
 
   describe('getQuote', () => {
