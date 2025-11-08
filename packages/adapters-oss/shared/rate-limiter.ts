@@ -1,8 +1,6 @@
 /**
  * Token bucket rate limiter for API requests.
- * TS/Node/browser safe: no globals or platform specifics.
- * Use only globalThis which is always defined.
- * Avoids any reference errors or missing names in TS/Node/Browsers/CI.
+ * Node.js compatible implementation using proper timer types.
  */
 
 export interface RateLimiterConfig {
@@ -10,16 +8,12 @@ export interface RateLimiterConfig {
   capacity: number;
 }
 
-// TS-safe: setTimeout and clearTimeout from globalThis, type assertions for universal compatibility
-const setTimeoutAny = (globalThis as any).setTimeout as typeof setTimeout;
-const clearTimeoutAny = (globalThis as any).clearTimeout as typeof clearTimeout;
-
 export class TokenBucketLimiter {
   private tokens: number;
   private lastRefill: number;
   private readonly tokensPerSecond: number;
   private readonly capacity: number;
-  private timerRef: ReturnType<typeof setTimeout> | null = null;
+  private timerRef: NodeJS.Timeout | null = null;
 
   constructor(tokensPerSecond: number = 10) {
     this.tokensPerSecond = tokensPerSecond;
@@ -37,7 +31,7 @@ export class TokenBucketLimiter {
     const tokensNeeded = tokens - this.tokens;
     const waitMs = (tokensNeeded / this.tokensPerSecond) * 1000;
     await new Promise<void>((resolve) => {
-      this.timerRef = setTimeoutAny(() => {
+      this.timerRef = setTimeout(() => {
         this.timerRef = null;
         resolve();
       }, waitMs);
@@ -63,7 +57,7 @@ export class TokenBucketLimiter {
     this.tokens = this.capacity;
     this.lastRefill = Date.now();
     if (this.timerRef) {
-      clearTimeoutAny(this.timerRef);
+      clearTimeout(this.timerRef);
       this.timerRef = null;
     }
   }
