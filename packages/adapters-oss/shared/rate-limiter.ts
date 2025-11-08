@@ -1,7 +1,8 @@
 /**
  * Token bucket rate limiter for API requests.
- * Best-practice cross-platform: use window.setTimeout / window.clearTimeout if present, fallback to global, fallback to Node.js.
- * No ambiguity for TS. Compatible with TurboRepo, Node, browser, pnpm, CI, and all environments.
+ * TS/Node/browser safe: no globals or platform specifics.
+ * Use only globalThis which is always defined.
+ * Avoids any reference errors or missing names in TS/Node/Browsers/CI.
  */
 
 export interface RateLimiterConfig {
@@ -9,21 +10,9 @@ export interface RateLimiterConfig {
   capacity: number;
 }
 
-// Get cross-platform setTimeout / clearTimeout.
-function getTimeoutFns() {
-  if (typeof window !== 'undefined' && typeof window.setTimeout === 'function') {
-    return { setTimeout: window.setTimeout.bind(window), clearTimeout: window.clearTimeout.bind(window) };
-  }
-  if (typeof global !== 'undefined' && typeof global.setTimeout === 'function') {
-    return { setTimeout: global.setTimeout.bind(global), clearTimeout: global.clearTimeout.bind(global) };
-  }
-  // Last-ditch: see if globalThis is defined with setTimeout.
-  if (typeof globalThis !== 'undefined' && typeof globalThis.setTimeout === 'function') {
-    return { setTimeout: globalThis.setTimeout.bind(globalThis), clearTimeout: globalThis.clearTimeout.bind(globalThis) };
-  }
-  throw new Error('setTimeout not available in this JS environment.');
-}
-const { setTimeout, clearTimeout } = getTimeoutFns();
+// TS-safe: setTimeout and clearTimeout from globalThis, type assertions for universal compatibility
+const setTimeoutAny = (globalThis as any).setTimeout as typeof setTimeout;
+const clearTimeoutAny = (globalThis as any).clearTimeout as typeof clearTimeout;
 
 export class TokenBucketLimiter {
   private tokens: number;
@@ -48,7 +37,7 @@ export class TokenBucketLimiter {
     const tokensNeeded = tokens - this.tokens;
     const waitMs = (tokensNeeded / this.tokensPerSecond) * 1000;
     await new Promise<void>((resolve) => {
-      this.timerRef = setTimeout(() => {
+      this.timerRef = setTimeoutAny(() => {
         this.timerRef = null;
         resolve();
       }, waitMs);
@@ -74,7 +63,7 @@ export class TokenBucketLimiter {
     this.tokens = this.capacity;
     this.lastRefill = Date.now();
     if (this.timerRef) {
-      clearTimeout(this.timerRef);
+      clearTimeoutAny(this.timerRef);
       this.timerRef = null;
     }
   }
