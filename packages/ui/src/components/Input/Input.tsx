@@ -1,7 +1,7 @@
 import type { InputHTMLAttributes } from 'react';
 import type { Size } from '../../types';
 
-export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   /** Size of the input */
   size?: Size;
   /** Error state with optional message */

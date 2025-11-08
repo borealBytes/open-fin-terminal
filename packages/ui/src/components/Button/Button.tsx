@@ -1,7 +1,7 @@
 import type { ButtonHTMLAttributes } from 'react';
 import type { Size, Variant } from '../../types';
 
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
   /** Visual variant of the button */
   variant?: Variant;
   /** Size of the button */
@@ -10,6 +10,8 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
   /** Full width button */
   fullWidth?: boolean;
+  /** Button type attribute */
+  type?: 'button' | 'submit' | 'reset';
 }
 
 /**
