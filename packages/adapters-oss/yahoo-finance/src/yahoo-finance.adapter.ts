@@ -13,7 +13,7 @@ import type {
   FundamentalsParams,
 } from '@open-fin-terminal/adapters';
 import { AdapterError } from '@open-fin-terminal/adapters';
-import type { Quote, HistoricalPrice, Fundamentals } from '@open-fin-terminal/shared';
+import type { Quote, HistoricalPrice, Fundamentals, OHLCV } from '@open-fin-terminal/shared';
 import type { YahooQuoteResponse, YahooChartResponse } from './types';
 import { YahooQuoteResponseSchema, YahooChartResponseSchema } from './types';
 
@@ -140,14 +140,13 @@ export class YahooFinanceAdapter implements DataAdapter {
       return {
         symbol: quote.symbol,
         price: quote.regularMarketPrice,
-        change: quote.regularMarketChange,
-        changePercent: quote.regularMarketChangePercent,
+        volume: quote.regularMarketVolume,
         previousClose: quote.regularMarketPreviousClose,
         open: quote.regularMarketOpen,
         high: quote.regularMarketDayHigh,
         low: quote.regularMarketDayLow,
-        volume: quote.regularMarketVolume,
         timestamp: new Date(),
+        realtime: false,
       };
     } catch (error) {
       if (error instanceof AdapterError) {
@@ -223,14 +222,16 @@ export class YahooFinanceAdapter implements DataAdapter {
           continue;
         }
 
-        prices.push({
-          symbol,
-          timestamp: new Date(timestamp[i] * 1000),
+        const ohlcv: OHLCV = {
           open: quotes.open[i]!,
           high: quotes.high[i]!,
           low: quotes.low[i]!,
           close: quotes.close[i]!,
           volume: quotes.volume[i]!,
+        };
+        prices.push({
+          date: new Date(timestamp[i] * 1000),
+          ohlcv,
         });
       }
 
