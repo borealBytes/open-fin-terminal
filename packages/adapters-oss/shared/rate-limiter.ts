@@ -15,14 +15,6 @@ export interface RateLimiterConfig {
  * Token bucket rate limiter implementation.
  * 
  * Ensures requests don't exceed API rate limits.
- * 
- * @example
- * // SEC EDGAR: 10 req/sec
- * const limiter = new TokenBucketLimiter(10, 1000);
- * await limiter.acquire();
- * 
- * // Custom configuration
- * const limiter = new TokenBucketLimiter({ tokensPerSecond: 5, capacity: 10 });
  */
 export class TokenBucketLimiter {
   private tokens: number;
@@ -30,11 +22,7 @@ export class TokenBucketLimiter {
   private readonly tokensPerSecond: number;
   private readonly capacity: number;
 
-  /**
-   * @param tokensPerSecond - Rate limit (tokens per second)
-   * @param refillIntervalMs - Interval for refilling tokens (default: 1000ms)
-   */
-  constructor(tokensPerSecond: number = 10, refillIntervalMs: number = 1000) {
+  constructor(tokensPerSecond: number = 10) {
     this.tokensPerSecond = tokensPerSecond;
     this.capacity = tokensPerSecond;
     this.tokens = this.capacity;
@@ -43,23 +31,21 @@ export class TokenBucketLimiter {
 
   /**
    * Acquire a token, waiting if necessary.
-   * 
    * @param tokens - Number of tokens needed (default: 1)
    * @returns Promise that resolves when token is acquired
    */
   async acquire(tokens: number = 1): Promise<void> {
     this.refillTokens();
-
     if (this.tokens >= tokens) {
       this.tokens -= tokens;
       return;
     }
-
     // Calculate wait time needed
     const tokensNeeded = tokens - this.tokens;
     const waitMs = (tokensNeeded / this.tokensPerSecond) * 1000;
-
-    await new Promise((resolve) => setTimeout(resolve, waitMs));
+    // @ts-ignore: node and browser support
+    const _setTimeout = typeof setTimeout !== 'undefined' ? setTimeout : (fn: () => void, ms: number) => {require('timers').setTimeout(fn, ms);};
+    await new Promise((resolve) => _setTimeout(resolve, waitMs));
     this.refillTokens();
     this.tokens -= tokens;
   }
@@ -79,7 +65,6 @@ export class TokenBucketLimiter {
     const now = Date.now();
     const elapsed = now - this.lastRefill;
     const tokensToAdd = (elapsed / 1000) * this.tokensPerSecond;
-
     this.tokens = Math.min(this.capacity, this.tokens + tokensToAdd);
     this.lastRefill = now;
   }
