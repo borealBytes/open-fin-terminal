@@ -19,7 +19,7 @@ import type { Quote, HistoricalPrice, Fundamentals, IncomeStatement, BalanceShee
 import { CIKLookup } from './cik-lookup';
 import { TokenBucketLimiter } from './rate-limiter';
 import { MemoryCache } from './cache';
-import type { CompanyFactsResponse, SECFundamentals, UnitFact } from './types';
+import type { CompanyFactsResponse, UnitFact } from './types';
 import { CompanyFactsResponseSchema } from './types';
 
 const SEC_API_BASE = 'https://data.sec.gov';
