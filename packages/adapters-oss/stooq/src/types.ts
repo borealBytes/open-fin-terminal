@@ -1,4 +1,5 @@
 /**
- * Types for Stooq CSV data adapter.
+ * Stooq CSV data adapter for Open Financial Terminal.
  */
-// Removed unused StooqCSVRow interface to resolve TS6133 build error.
+
+export {};
