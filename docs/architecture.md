@@ -65,100 +65,109 @@ Open Financial Terminal is a web-based financial analysis platform approximating
 
 ### High-Level Architecture
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        Browser                              │
-│                                                             │
-│  ┌──────────────────────────────────────────────────────┐ │
-│  │              Next.js Application                      │ │
-│  │                                                        │ │
-│  │  ┌──────────────┐  ┌──────────────┐  ┌────────────┐ │ │
-│  │  │  Command     │  │  Workspace   │  │  Charts    │ │ │
-│  │  │  Palette     │  │  Manager     │  │  & Viz     │ │ │
-│  │  └──────────────┘  └──────────────┘  └────────────┘ │ │
-│  │                                                        │ │
-│  │  ┌──────────────────────────────────────────────────┐ │ │
-│  │  │           UI Component Library                    │ │ │
-│  │  │  (Button, Input, Card, Spinner, etc.)           │ │ │
-│  │  └──────────────────────────────────────────────────┘ │ │
-│  │                                                        │ │
-│  │  ┌──────────────────────────────────────────────────┐ │ │
-│  │  │           Adapter Registry                        │ │ │
-│  │  │  ┌─────────┐ ┌─────────┐ ┌─────────┐            │ │ │
-│  │  │  │ SEC     │ │ Yahoo   │ │ Crypto  │            │ │ │
-│  │  │  │ EDGAR   │ │ Finance │ │ Exchange│   + More   │ │ │
-│  │  │  └─────────┘ └─────────┘ └─────────┘            │ │ │
-│  │  └──────────────────────────────────────────────────┘ │ │
-│  └────────────────────────────────────────────────────────┘ │
-│                                                             │
-│  ┌──────────────────────────────────────────────────────┐ │
-│  │              Web Workers (Analytics)                  │ │
-│  │  ┌────────────┐  ┌────────────┐  ┌─────────────┐    │ │
-│  │  │ Technical  │  │  Options   │  │ Portfolio   │    │ │
-│  │  │ Indicators │  │  Pricing   │  │ Analytics   │    │ │
-│  │  └────────────┘  └────────────┘  └─────────────┘    │ │
-│  └──────────────────────────────────────────────────────┘ │
-│                                                             │
-│  ┌──────────────────────────────────────────────────────┐ │
-│  │          IndexedDB (Local Storage)                    │ │
-│  │  • Watchlists  • Workspaces  • Settings  • Cache     │ │
-│  └──────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
-         │
-         │ HTTPS
-         ▼
-┌─────────────────────────────────────────────────────────────┐
-│              External Data Sources (Public APIs)             │
-│  • SEC EDGAR  • Yahoo Finance  • Crypto Exchanges           │
-│  • U.S. Treasury  • ECB  • IMF  • World Bank                │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph Browser[" Browser Environment"]
+        subgraph NextApp["Next.js Application"]
+            UI["UI Layer<br/>Command Palette<br/>Workspaces<br/>Charts"]
+            Components["UI Components<br/>Button, Input<br/>Card, Spinner"]
+            Registry["Adapter Registry<br/>SEC EDGAR<br/>Yahoo Finance<br/>Crypto Exchanges"]
+        end
+        
+        subgraph Workers["Web Workers"]
+            Analytics["Analytics<br/>Technical Indicators<br/>Options Pricing<br/>Portfolio Metrics"]
+        end
+        
+        Storage[("IndexedDB<br/>Watchlists<br/>Workspaces<br/>Settings<br/>Cache")]
+    end
+    
+    DataSources["External Data Sources<br/>SEC EDGAR<br/>Yahoo Finance<br/>Crypto Exchanges<br/>U.S. Treasury<br/>ECB, IMF, World Bank"]
+    
+    UI --> Components
+    UI --> Registry
+    UI --> Workers
+    Registry -->|HTTPS| DataSources
+    UI --> Storage
+    Workers --> Storage
+    
+    style Browser fill:#1a1a1a,stroke:#666,color:#e0e0e0
+    style NextApp fill:#2d2d2d,stroke:#666,color:#e0e0e0
+    style Workers fill:#2d2d2d,stroke:#666,color:#e0e0e0
+    style UI fill:#0066cc,stroke:#004499,color:#fff
+    style Components fill:#0066cc,stroke:#004499,color:#fff
+    style Registry fill:#0066cc,stroke:#004499,color:#fff
+    style Analytics fill:#0066cc,stroke:#004499,color:#fff
+    style Storage fill:#4a4a4a,stroke:#666,color:#e0e0e0
+    style DataSources fill:#4a4a4a,stroke:#666,color:#e0e0e0
 ```
 
-### Component Interaction
+### Component Interaction Flow
 
-```
-┌────────────┐     ┌──────────────┐     ┌──────────────┐
-│    User    │────▶│  UI Layer    │────▶│   Adapters   │
-└────────────┘     └──────────────┘     └──────────────┘
-                          │                      │
-                          │                      ▼
-                          │              ┌──────────────┐
-                          │              │ Data Sources │
-                          │              └──────────────┘
-                          │
-                          ▼
-                   ┌──────────────┐
-                   │   Workers    │
-                   │  (Analytics) │
-                   └──────────────┘
-                          │
-                          ▼
-                   ┌──────────────┐
-                   │   Results    │
-                   │   (Charts)   │
-                   └──────────────┘
+```mermaid
+flowchart LR
+    User[" User"] -->|Input| UI[UI Layer]
+    UI -->|Request| Adapters[Adapters]
+    Adapters -->|Fetch| Data[Data Sources]
+    Data -->|Response| Adapters
+    Adapters -->|Data| Workers[Workers]
+    Workers -->|Results| Charts[Charts]
+    Charts -->|Update| UI
+    
+    style User fill:#0066cc,stroke:#004499,color:#fff
+    style UI fill:#0066cc,stroke:#004499,color:#fff
+    style Adapters fill:#0066cc,stroke:#004499,color:#fff
+    style Data fill:#4a4a4a,stroke:#666,color:#e0e0e0
+    style Workers fill:#0066cc,stroke:#004499,color:#fff
+    style Charts fill:#0066cc,stroke:#004499,color:#fff
 ```
 
 ## Package Structure
 
 ### Monorepo Organization
 
-```
-open-fin-terminal/
-├── apps/
-│   ├── web/              # Next.js application (main UI)
-│   └── server/           # Optional Node.js server (Phase 9)
-├── packages/
-│   ├── shared/           # Common types, schemas, utilities
-│   ├── adapters/         # Data adapter interfaces
-│   ├── adapters-oss/     # Free OSS data adapters (Phase 3)
-│   ├── adapters-opt/     # Optional authenticated adapters (Phase 8)
-│   ├── openbb-client/    # Optional OpenBB Platform client
-│   ├── analytics/        # Analytics engine (Phase 5)
-│   ├── ui/               # UI component library
-│   ├── workers/          # Web Worker runtime
-│   └── docs/             # Documentation content
-└── .github/workflows/    # CI/CD automation
+```mermaid
+graph TD
+    Root["<b>open-fin-terminal/</b>"]
+    
+    Apps["<b>apps/</b>"]
+    Web["web/<br/><i>Next.js App</i>"]
+    Server["server/<br/><i>Optional Node.js</i>"]
+    
+    Packages["<b>packages/</b>"]
+    Shared["shared/<br/><i>Types & Utils</i>"]
+    Adapters["adapters/<br/><i>Interfaces</i>"]
+    AdaptersOSS["adapters-oss/<br/><i>Free Adapters</i>"]
+    AdaptersOpt["adapters-opt/<br/><i>Optional</i>"]
+    OpenBB["openbb-client/<br/><i>OpenBB</i>"]
+    Analytics["analytics/<br/><i>Functions</i>"]
+    UI["ui/<br/><i>Components</i>"]
+    Workers["workers/<br/><i>Web Workers</i>"]
+    Docs["docs/<br/><i>Documentation</i>"]
+    
+    Root --> Apps
+    Root --> Packages
+    
+    Apps --> Web
+    Apps --> Server
+    
+    Packages --> Shared
+    Packages --> Adapters
+    Packages --> AdaptersOSS
+    Packages --> AdaptersOpt
+    Packages --> OpenBB
+    Packages --> Analytics
+    Packages --> UI
+    Packages --> Workers
+    Packages --> Docs
+    
+    style Root fill:#0066cc,stroke:#004499,color:#fff
+    style Apps fill:#2d2d2d,stroke:#666,color:#e0e0e0
+    style Packages fill:#2d2d2d,stroke:#666,color:#e0e0e0
+    style Web fill:#0066cc,stroke:#004499,color:#fff
+    style UI fill:#0066cc,stroke:#004499,color:#fff
+    style Workers fill:#0066cc,stroke:#004499,color:#fff
+    style Adapters fill:#0066cc,stroke:#004499,color:#fff
+    style Shared fill:#0066cc,stroke:#004499,color:#fff
 ```
 
 ### Package Descriptions
@@ -241,59 +250,80 @@ open-fin-terminal/
 
 ### 1. User Interaction Flow
 
-```
-User Input → Command Palette → Action Handler → Adapter Registry → Data Source
-                                                       ↓
-                                                  Data Response
-                                                       ↓
-                                                  Type Validation
-                                                       ↓
-                                                  Analytics Worker
-                                                       ↓
-                                                  Chart Rendering
-                                                       ↓
-                                                  UI Update
+```mermaid
+sequenceDiagram
+    actor User
+    participant CP as Command Palette
+    participant AR as Adapter Registry
+    participant DS as Data Source
+    participant W as Web Worker
+    participant Chart as Chart Component
+    
+    User->>CP: Enter Command<br/>(e.g., AAPL GP)
+    CP->>AR: Request Quote
+    AR->>DS: GET /api/quote?symbol=AAPL
+    DS-->>AR: Quote Data (JSON)
+    AR->>AR: Validate with Zod
+    AR->>W: Calculate Indicators
+    W->>W: Process Data<br/>(SMA, RSI, etc.)
+    W-->>Chart: Results
+    Chart->>User: Render Chart
 ```
 
-### 2. Data Adapter Flow
+### 2. Data Adapter Flow with Fallback
 
-```
-Request → AdapterRegistry.getAdapter()
-             ↓
-       Get Healthy Adapter
-             ↓
-       adapter.getQuote(symbol)
-             ↓
-       [Primary Adapter]
-             ↓ (on error)
-       [Fallback Adapter 1]
-             ↓ (on error)
-       [Fallback Adapter 2]
-             ↓
-       Validated Response
+```mermaid
+flowchart TD
+    Start([Request Quote]) --> Registry[Adapter Registry]
+    Registry --> Primary[Primary Adapter<br/>Yahoo Finance]
+    Primary -->|Success| Validate[Validate with Zod]
+    Primary -->|Error| Fallback1[Fallback Adapter 1<br/>SEC EDGAR]
+    Fallback1 -->|Success| Validate
+    Fallback1 -->|Error| Fallback2[Fallback Adapter 2<br/>Stooq]
+    Fallback2 -->|Success| Validate
+    Fallback2 -->|Error| Fail([Return Error])
+    Validate --> Success([Return Data])
+    
+    style Start fill:#0066cc,stroke:#004499,color:#fff
+    style Registry fill:#0066cc,stroke:#004499,color:#fff
+    style Primary fill:#0066cc,stroke:#004499,color:#fff
+    style Fallback1 fill:#0066cc,stroke:#004499,color:#fff
+    style Fallback2 fill:#0066cc,stroke:#004499,color:#fff
+    style Validate fill:#0066cc,stroke:#004499,color:#fff
+    style Success fill:#00aa00,stroke:#007700,color:#fff
+    style Fail fill:#cc0000,stroke:#990000,color:#fff
 ```
 
 ### 3. Analytics Worker Flow
 
-```
-Main Thread                    Worker Thread
-    │                               │
-    ├──┐ WorkerPool.execute()      │
-    │  │                            │
-    │  ├─────────────────────────▶ │
-    │  │   Task + Data              │
-    │  │                            │
-    │  │                        ┌───┴───┐
-    │  │                        │ Heavy │
-    │  │                        │ Comp  │
-    │  │                        └───┬───┘
-    │  │                            │
-    │  │◀─────────────────────────┤
-    │  │   Results                 │
-    ├──┘                           │
-    │                               │
-    ├──┐ Update UI                 │
-    └──┘                           │
+```mermaid
+sequenceDiagram
+    participant MT as Main Thread
+    participant WM as WorkerManager
+    participant WP as WorkerPool
+    participant W1 as Worker 1
+    participant W2 as Worker 2
+    
+    MT->>WP: execute(calculateSMA)
+    WP->>WM: getAvailableWorker()
+    WM-->>WP: Worker 1 (idle)
+    WP->>W1: postMessage(task, data)
+    
+    MT->>WP: execute(calculateRSI)
+    WP->>WM: getAvailableWorker()
+    WM-->>WP: Worker 2 (idle)
+    WP->>W2: postMessage(task, data)
+    
+    Note over W1,W2: Heavy computation<br/>in parallel
+    
+    W1-->>WP: Results (SMA)
+    WP-->>MT: Return SMA
+    
+    W2-->>WP: Results (RSI)
+    WP-->>MT: Return RSI
+    
+    WP->>WM: markIdle(Worker 1)
+    WP->>WM: markIdle(Worker 2)
 ```
 
 ## Technology Stack
@@ -343,22 +373,18 @@ Main Thread                    Worker Thread
 
 **Current**: ✅ Implemented
 
-```
-┌──────────────┐
-│   Browser    │
-└──────┬───────┘
-       │ HTTPS
-       ▼
-┌──────────────┐
-│ GitHub Pages │
-│ (Static HTML)│
-└──────┬───────┘
-       │
-       ▼
-┌──────────────┐
-│ Public APIs  │
-│ (CORS)       │
-└──────────────┘
+```mermaid
+flowchart TB
+    Browser[" Browser"]
+    GHP[" GitHub Pages<br/>(Static HTML/JS/CSS)"]
+    APIs[" Public APIs<br/>(CORS-enabled)"]
+    
+    Browser -->|HTTPS| GHP
+    Browser -->|HTTPS<br/>Direct calls| APIs
+    
+    style Browser fill:#0066cc,stroke:#004499,color:#fff
+    style GHP fill:#0066cc,stroke:#004499,color:#fff
+    style APIs fill:#4a4a4a,stroke:#666,color:#e0e0e0
 ```
 
 **Pros**:
@@ -376,26 +402,29 @@ Main Thread                    Worker Thread
 
 **Planned**: Phase 9
 
-```
-┌──────────────┐
-│   Browser    │
-└──────┬───────┘
-       │ HTTPS
-       ▼
-┌──────────────────────────────┐
-│     Docker Compose Host      │
-│  ┌────────────┐ ┌──────────┐│
-│  │  Next.js   │ │  Redis   ││
-│  │  (SSR)     │ │  (Cache) ││
-│  └─────┬──────┘ └──────────┘│
-└────────┼───────────────────── │
-         │
-         ▼
-┌──────────────┐
-│ Public APIs  │
-│ + Optional   │
-│ Auth Sources │
-└──────────────┘
+```mermaid
+flowchart TB
+    Browser[" Browser"]
+    
+    subgraph Docker[" Docker Compose Host"]
+        NextJS["Next.js<br/>(SSR)"]
+        Redis[("Redis<br/>(Cache)")]
+    end
+    
+    APIs1[" Public APIs"]
+    APIs2[" Optional<br/>Auth Sources"]
+    
+    Browser -->|HTTPS| NextJS
+    NextJS <-->|Cache| Redis
+    NextJS -->|Proxy| APIs1
+    NextJS -->|Proxy<br/>with Auth| APIs2
+    
+    style Browser fill:#0066cc,stroke:#004499,color:#fff
+    style Docker fill:#2d2d2d,stroke:#666,color:#e0e0e0
+    style NextJS fill:#0066cc,stroke:#004499,color:#fff
+    style Redis fill:#4a4a4a,stroke:#666,color:#e0e0e0
+    style APIs1 fill:#4a4a4a,stroke:#666,color:#e0e0e0
+    style APIs2 fill:#4a4a4a,stroke:#666,color:#e0e0e0
 ```
 
 **Pros**:
@@ -510,3 +539,4 @@ worker-src 'self' blob:;
 - [Comlink (Web Workers)](https://github.com/GoogleChromeLabs/comlink)
 - [Zod Validation](https://zod.dev/)
 - [WCAG 2.1](https://www.w3.org/WAI/WCAG21/quickref/)
+- [Mermaid Diagrams](https://mermaid.js.org/)
