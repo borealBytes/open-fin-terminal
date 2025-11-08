@@ -229,6 +229,7 @@ export class TreasuryAdapter implements Partial<DataAdapter> {
 
   // Stub implementations for DataAdapter interface
   async getQuote(params: QuoteParams): Promise<Quote> {
+    void params; // Satisfy noUnusedParameters
     throw new AdapterError(
       'Treasury adapter does not support quote data',
       this.name,
@@ -237,6 +238,7 @@ export class TreasuryAdapter implements Partial<DataAdapter> {
   }
 
   async getHistoricalPrices(params: HistoricalPriceParams): Promise<HistoricalPrice[]> {
+    void params; // Satisfy noUnusedParameters
     throw new AdapterError(
       'Treasury adapter does not support historical price data',
       this.name,
@@ -245,6 +247,7 @@ export class TreasuryAdapter implements Partial<DataAdapter> {
   }
 
   async getFundamentals(params: FundamentalsParams): Promise<Fundamentals> {
+    void params; // Satisfy noUnusedParameters
     throw new AdapterError(
       'Treasury adapter does not support fundamentals data',
       this.name,
