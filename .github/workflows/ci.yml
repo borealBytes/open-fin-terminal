@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  contents: write  # Was 'read', must be 'write' to allow preview deployments
   pages: write
   id-token: write
   pull-requests: write
