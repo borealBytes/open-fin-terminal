@@ -181,21 +181,33 @@ describe('WorkerPool', () => {
     });
 
     it('clears task queue', async () => {
-      pool = new WorkerPool(createMockWorker, { minWorkers: 1 });
+      pool = new WorkerPool(createMockWorker, {
+        minWorkers: 1,
+        maxWorkers: 1,
+      });
       
-      // Create queued task
-      let resolve: (value: number) => void;
-      pool.execute(vi.fn().mockImplementation(
-        () => new Promise<number>((res) => { resolve = res; })
-      ));
+      // Create a blocking task to keep the worker busy
+      let resolveFirstTask: (value: number) => void;
+      const blockingTask = vi.fn().mockImplementation(
+        () => new Promise<number>((res) => { resolveFirstTask = res; })
+      );
       
+      // Start first task (blocks the only worker)
+      const promise1 = pool.execute(blockingTask);
+      
+      // Wait for first task to start and occupy the worker
       await new Promise(r => setTimeout(r, 10));
-      pool.execute(vi.fn().mockResolvedValue(2)); // This will be queued
       
+      // Submit second task - this should be queued since worker is busy
+      const promise2 = pool.execute(vi.fn().mockResolvedValue(2));
+      
+      // Verify task is queued before destroy
       expect(pool.getStats().queuedTasks).toBe(1);
       
+      // Destroy pool (should clear queue)
       await pool.destroy();
       
+      // Verify queue is cleared
       expect(pool.getStats().queuedTasks).toBe(0);
     });
   });
