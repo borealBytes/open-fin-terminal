@@ -47,17 +47,10 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Run all tests (global)
+      - name: Run all tests (mocked and live)
+        env:
+          LIVE_TESTS: true
         run: pnpm test
-
-      - name: Test - SEC EDGAR adapter
-        run: pnpm --filter=@open-fin-terminal/adapters-sec-edgar test
-
-      - name: Test - Yahoo Finance adapter
-        run: pnpm --filter=@open-fin-terminal/adapters-yahoo-finance test
-
-      - name: Test - Stooq adapter
-        run: pnpm --filter=@open-fin-terminal/adapters-stooq test
 
       - name: Export static site
         run: |
