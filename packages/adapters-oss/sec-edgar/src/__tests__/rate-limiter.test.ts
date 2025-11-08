@@ -24,11 +24,10 @@ describe('TokenBucketLimiter', () => {
       expect(limiter.isReady(5)).toBe(true);
     });
 
-    it('should return false when not enough tokens', () => {
-      // Use up all tokens
-      for (let i = 0; i < 10; i++) {
-        limiter.isReady(1);
-      }
+    it('should return false when not enough tokens', async () => {
+      // Consume all tokens immediately
+      await limiter.waitFor(10);
+      // Check immediately before any refill can occur
       expect(limiter.isReady(1)).toBe(false);
     });
 
