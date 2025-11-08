@@ -2,10 +2,10 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
-    "composite": false,
+    // Remove rootDir setting to fix source files location errors
     "declaration": true,
     "declarationMap": false,
+    "composite": false,
     "incremental": false,
     "emitDeclarationOnly": false
   },
@@ -15,7 +15,9 @@
     "src/types.ts"
   ],
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "../shared/cache.ts",
+    "../shared/rate-limiter.ts"
   ],
   "exclude": [
     "node_modules",
