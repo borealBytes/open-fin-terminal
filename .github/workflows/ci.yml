@@ -18,7 +18,6 @@ permissions:
   checks: write
 
 jobs:
-  # Single build and validation job
   build-and-test:
     runs-on: ubuntu-latest
     steps:
@@ -48,24 +47,27 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Run tests
-        run: pnpm test
+      - name: Test - SEC EDGAR adapter
+        run: pnpm --filter=@open-fin-terminal/adapters-oss/sec-edgar test
 
-      # Export static site for deployment
+      - name: Test - Yahoo Finance adapter
+        run: pnpm --filter=@open-fin-terminal/adapters-oss/yahoo-finance test
+
+      - name: Test - Stooq adapter
+        run: pnpm --filter=@open-fin-terminal/adapters-oss/stooq test
+
       - name: Export static site
         run: |
           cd apps/web
           NEXT_PUBLIC_BASE_PATH=/open-fin-terminal pnpm build
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
-      # Upload artifact for GitHub Pages deployment
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: apps/web/out
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
-      # For PRs: Upload preview artifact
       - name: Export PR preview
         run: |
           cd apps/web
@@ -80,7 +82,6 @@ jobs:
           retention-days: 30
         if: github.event_name == 'pull_request'
 
-      # Comment on PR with preview link
       - name: Comment PR with preview info
         uses: actions/github-script@v7
         if: github.event_name == 'pull_request'
@@ -133,7 +134,6 @@ jobs:
       - name: CI validation complete
         run: echo "✅ CI validation and build complete"
 
-  # Deploy to GitHub Pages (only on main branch pushes)
   deploy-pages:
     needs: build-and-test
     runs-on: ubuntu-latest
