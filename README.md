@@ -18,12 +18,13 @@
 - Example packages with TypeScript types
 - **Live Preview**: https://borealbytes.github.io/open-fin-terminal/
 
-**🚧 Active Development** - Currently implementing Phase 2:
-- Core package structures
-- Data adapter interfaces
-- UI component library
-- Analytics engine foundation
-- Optional enhanced adapter support (OpenBB Platform)
+**🚧 Phase 2 In Progress** - Core package infrastructure:
+- ✅ Data adapter interface (`@open-fin-terminal/adapters`)
+- ✅ Enhanced shared types (Quote, HistoricalPrice, Fundamentals)
+- ✅ AdapterRegistry with fallback logic
+- ✅ Optional OpenBB Platform client
+- 🚧 UI component library
+- 🚧 Web Worker runtime
 
 ## 🎯 Project Goals
 
@@ -46,17 +47,17 @@ open-fin-terminal/
 │   └── server/           # 🚧 Optional Node.js server for self-hosting (Phase 9)
 ├── packages/
 │   ├── shared/           # ✅ Domain types, schemas, utilities
-│   ├── adapters/         # 🚧 Adapter interface definitions (Phase 2)
+│   ├── adapters/         # 🚧 Adapter interface definitions (Phase 2 - In Progress)
 │   ├── adapters-oss/     # 🚧 Default no-account data adapters (Phase 3)
 │   ├── adapters-opt/     # 🚧 Optional credentialed adapters (Phase 8)
-│   ├── openbb-client/    # ✅ Optional OpenBB Platform integration (Phase 2)
+│   ├── openbb-client/    # ✅ Optional OpenBB Platform integration
 │   ├── analytics/        # 🚧 Function engine (Phase 5)
-│   ├── ui/               # 🚧 Shared UI components (Phase 2)
-│   ├── workers/          # 🚧 Web workers for analytics (Phase 2)
+│   ├── ui/               # 🚧 Shared UI components (Phase 2 - Planned)
+│   ├── workers/          # 🚧 Web workers for analytics (Phase 2 - Planned)
 │   └── docs/             # ✅ Documentation content
 └── .github/workflows/  # ✅ CI/CD automation
 
-✅ = Implemented  🚧 = Planned
+✅ = Implemented  🚧 = Planned/In Progress
 ```
 
 ## 🚀 Quick Start
@@ -137,7 +138,7 @@ These adapters work out-of-the-box with no additional software, accounts, or API
 - Filings: SEC EDGAR RSS feeds
 - News: Public RSS feeds (where permitted)
 
-> **Status**: Phase 3 implementation planned. See `packages/adapters-oss/` for TypeScript implementations.
+> **Status**: Phase 3 implementation planned. Adapter interface ready in Phase 2. See `packages/adapters/` for interface definitions and `packages/adapters-oss/` for planned implementations.
 
 ### 🔌 Optional Enhanced Adapters (Require Setup)
 
@@ -240,6 +241,7 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for:
 
 ## 📚 Documentation
 
+- [Adapter Strategy](./docs/ADAPTER_STRATEGY.md) ✅
 - [Architecture Details](./packages/docs/architecture.md) (Coming in Phase 2)
 - [Feature Coverage Matrix](./packages/docs/feature-coverage-matrix.csv) ✅
 - [Gap Analysis](./packages/docs/gap-analysis.md) ✅
@@ -252,8 +254,8 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for:
 ## 🗺️ Roadmap
 
 - [x] **Phase 1**: Core terminal UI foundation and repository infrastructure ✅
-- [ ] **Phase 2**: Core packages (adapters interface, UI components, workers, optional OpenBB client)
-- [ ] **Phase 3**: Default OSS data adapters (SEC EDGAR, Stooq, Treasury, etc.) - TypeScript implementations
+- [x] **Phase 2**: Core packages (adapters interface ✅, UI components 🚧, workers 🚧, optional OpenBB client ✅)
+- [ ] **Phase 3**: Default OSS data adapters (SEC EDGAR, Yahoo Finance, Treasury, etc.) - TypeScript implementations
 - [ ] **Phase 4**: Web application enhancement (command palette, workspaces)
 - [ ] **Phase 5**: Analytics engine (technicals, options, portfolio)
 - [ ] **Phase 6**: Charts and visualizations (uPlot, indicators)
@@ -261,7 +263,10 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for:
 - [ ] **Phase 8**: Optional authenticated data adapters (direct TypeScript implementations)
 - [ ] **Phase 9**: Self-hosted server option with Redis caching
 
-See [PR #1](https://github.com/borealBytes/open-fin-terminal/pull/1) for detailed Phase 1 completion.
+See:
+- [PR #1](https://github.com/borealBytes/open-fin-terminal/pull/1) - Phase 1 completion
+- [PR #2](https://github.com/borealBytes/open-fin-terminal/pull/2) - OpenBB client integration
+- [Issue #3](https://github.com/borealBytes/open-fin-terminal/issues/3) - Phase 2 tracking
 
 ## 📝 License
 
