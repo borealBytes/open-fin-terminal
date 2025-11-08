@@ -1,0 +1,26 @@
+{
+  "data": [
+    {
+      "record_date": "2025-11-08",
+      "bc_1month": "5.25",
+      "bc_3month": "5.30",
+      "bc_6month": "5.28",
+      "bc_1year": "4.95",
+      "bc_2year": "4.50",
+      "bc_5year": "4.35",
+      "bc_7year": "4.30",
+      "bc_10year": "4.25",
+      "bc_20year": "4.45",
+      "bc_30year": "4.40"
+    }
+  ],
+  "meta": {
+    "count": 1,
+    "labels": {
+      "record_date": "Record Date",
+      "bc_1month": "1-Month",
+      "bc_3month": "3-Month",
+      "bc_10year": "10-Year"
+    }
+  }
+}
