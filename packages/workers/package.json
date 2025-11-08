@@ -1,0 +1,27 @@
+{
+  "name": "@open-fin-terminal/workers",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Web Worker runtime and utilities for Open Financial Terminal",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc --build",
+    "dev": "tsc --build --watch",
+    "lint": "echo 'Lint configuration pending ESLint 9 flat config migration (Phase 2)'",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "clean": "rm -rf dist .turbo node_modules"
+  },
+  "dependencies": {
+    "comlink": "^4.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.8.7",
+    "@vitest/coverage-v8": "^2.1.4",
+    "happy-dom": "^15.11.7",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
+  }
+}
